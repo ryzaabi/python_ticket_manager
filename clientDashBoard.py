@@ -385,7 +385,7 @@ class TicketManagerApp:
                 return
             
             # Call the manager to handle booking logic
-            success_message = self.manager.edit_ticket(LogRegModals.get_current_user(), ticket_id, int(num_tickets))
+            success_message = self.manager.edit_ticket(LogRegModals.get_current_user(), int(ticket_id), int(num_tickets))
             messagebox.showinfo("Success", success_message)
             booking_window.destroy()
 

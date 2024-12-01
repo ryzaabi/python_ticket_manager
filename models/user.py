@@ -38,7 +38,7 @@ class User:
         self._reservations.append(reservation)
 
     def display_details(self):
-        return f"User ID: {self._user_id}, Name: {self._name}, Email: {self._email}"
+        return [self._user_id, self._name,self._email, self.get_password()]
 
     # Manager Services
     def view_all_events(self, manager):

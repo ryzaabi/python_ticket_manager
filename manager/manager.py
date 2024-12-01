@@ -118,9 +118,9 @@ class Manager:
                 if d['uid'] == user.get_user_id():
                     if d['ticket'].get_ticket_id() == ticket_id:
                         d["num_tickets"] = num_tickets
-                        
                         return f"Ticket ID {ticket_id} successfully edited Ticket for user {user.get_name()}."
-                
+                else:
+                    print(d.values(),d['uid'],user.get_user_id())
         return "success"
     
     def delete_ticket(self, user,ticket_id):
@@ -161,6 +161,17 @@ class Manager:
                     ticket_d.append(d['num_tickets'])
                 data.append(ticket_d)
             return data
+        
+    def get_purchased_tickets(self):
+        data = []
+        if self._purchase_history:
+            for d in self._purchase_history:
+                ticket_d =  d['ticket'].display_details()
+                ticket_d.insert(0, d['uid'])
+                ticket_d.append(d['expiry'])
+                ticket_d.append(d['num_tickets'])
+                data.append(ticket_d)
+        return data
             
 
     # Reservation Management
