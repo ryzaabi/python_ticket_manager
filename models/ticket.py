@@ -1,11 +1,17 @@
 class Ticket:
-    def __init__(self, ticket_type, description, price, validity):
+    def __init__(self, ticket_id,ticket_type, description, price, validity,discount,limitations):
+        self.ticket_id = ticket_id
         self._ticket_type = ticket_type
         self._description = description
         self._price = price
         self._validity = validity
+        self._discount = discount
+        self._limitations = limitations
 
     # Getters
+    def get_ticket_id(self):
+        return self.ticket_id
+    
     def get_ticket_type(self):
         return self._ticket_type
 
@@ -18,8 +24,14 @@ class Ticket:
     def get_validity(self):
         return self._validity
 
+    def get_discount(self):
+        return self._discount
+    
+    def get_limitations(self):
+        return self._limitations
+
     def display_details(self):
-        return f"{self._ticket_type}: {self._description} - {self._price} DHS ({self._validity})"
+        return [self.ticket_id,self._ticket_type,self._description,self._price,self._validity,self._discount,self._limitations]
 
 
 class SingleDayTicket(Ticket):

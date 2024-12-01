@@ -4,7 +4,6 @@ class User:
         self._name = name
         self._email = email
         self._password = password
-        self._purchase_history = []
         self._reservations = []
 
     # Getters and Setters

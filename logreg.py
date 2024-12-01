@@ -6,7 +6,15 @@ from manager.manager import Manager
 # Instantiate the Manager class
 manager = Manager()
 
+
+current_user = User(0, "erick", 'erick@gmail.com', "mymum")
+
 class LogRegModals:
+
+    @staticmethod
+    def get_current_user():
+        return current_user
+    
     @staticmethod
     def create_register_window(parent):
         """Creates the Register modal window."""
@@ -104,6 +112,7 @@ class LogRegModals:
             for user in manager._users.values():
                 if user.get_email() == email and user.get_password() == password:
                     messagebox.showinfo("Success", f"Welcome, {user.get_name()}!")
+                    LogRegModals.current_user = user #attach user
                     login_window.destroy()
                     return
 
