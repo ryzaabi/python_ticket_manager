@@ -35,6 +35,7 @@ class Manager:
             user.add_ticket(ticket)
             return f"Ticket added for user {user.get_name()}."
         return "User not found."
+    
 
     def get_user_tickets(self, user):
         if user.get_user_id() in self._users:
