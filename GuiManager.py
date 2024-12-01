@@ -137,7 +137,7 @@ class TicketManagerApp:
         events = self.manager.get_all_events()
         if isinstance(events, list):
             for event in events:
-                event_tree.insert("", "end", values=tuple(event.values()))
+                event_tree.insert("", "end", values=tuple(event))
 
     def clear_content_frame(self):
         """Clear the content frame for dynamic switching."""
@@ -184,10 +184,10 @@ events = [
     },
     {
         
-        "Name": "Food Carnival",
-        "Description": "Delicious cuisines from around the world",
-        "Date": "2024-12-15",
-        "Time": "12:00 PM",
+        "name": "Food Carnival",
+        "description": "Delicious cuisines from around the world",
+        "date": "2024-12-15",
+        "time": "12:00 PM",
         "capacity": 300,
     },
 ]
@@ -197,7 +197,8 @@ if __name__ == "__main__":
     manager = Manager()
     manager._tickets = tickets  # Add mock tickets to the manager
     for event in events:  # Add mock events to the manager
-        manager.add_event(event)
+        ev = manager.add_event(event)
+        print(ev)
 
     root = tk.Tk()
     app = TicketManagerApp(root, manager)

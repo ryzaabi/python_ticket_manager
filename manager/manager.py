@@ -1,6 +1,8 @@
 
 from models.reservation import Reservation
 from models.event import Event
+
+
 class Manager:
     def __init__(self):
         self._users = {}
@@ -85,10 +87,13 @@ class Manager:
         )
         self._events[event_id] = event
         self._next_event_id += 1
-        return f"Event '{event_data.get('Name')}' added with ID {event_id}."
+        print(self._events)
+        return f"Event '{event_data.get('name')}' added with ID {event_id}."
 
 
     def get_all_events(self):
+        for x in self._events.values():
+            print(x.get_events())
         if not self._events:
             return "No events available."
-        return [event.display_details() for event in self._events.values()]
+        return [event.get_events() for event in self._events.values()]

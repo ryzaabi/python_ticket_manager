@@ -39,3 +39,9 @@ class Event:
             f"Event ID: {self._event_id}, Name: {self._name}, Description: {self._description}, "
             f"Date: {self._date}, Time: {self._time}, Capacity: {remv} remaining"
         )
+    
+    def get_events(self):
+        remv =  int(self._capacity) - len(self._reservations)
+        return ([
+            self._event_id, self._name, self._description, self._date,self._time,remv]
+        )
