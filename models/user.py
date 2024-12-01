@@ -19,6 +19,9 @@ class User:
 
     def get_email(self):
         return self._email
+    
+    def get_password(self):
+        return self._password
 
     def set_email(self, email):
         self._email = email

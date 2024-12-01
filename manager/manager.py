@@ -67,6 +67,26 @@ class Manager:
         self._events[event_id] = event
         self._next_event_id += 1
         return f"Event '{name}' added with ID {event_id}."
+    
+    # Event Management
+    def add_event(self, event_data):
+        """
+        Add an event using a dictionary with keys:
+        'Name', 'Description', 'Date', 'Time', 'Capacity'.
+        """
+        event_id = self._next_event_id
+        event = Event(
+            event_id,
+            event_data.get('name'),
+            event_data.get('description'),
+            event_data.get('date'),
+            event_data.get('time'),
+            event_data.get('capacity'),
+        )
+        self._events[event_id] = event
+        self._next_event_id += 1
+        return f"Event '{event_data.get('Name')}' added with ID {event_id}."
+
 
     def get_all_events(self):
         if not self._events:

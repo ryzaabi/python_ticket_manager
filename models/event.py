@@ -34,7 +34,8 @@ class Event:
         return "Event capacity reached."
 
     def display_details(self):
+        remv =  int(self._capacity) - len(self._reservations)
         return (
             f"Event ID: {self._event_id}, Name: {self._name}, Description: {self._description}, "
-            f"Date: {self._date}, Time: {self._time}, Capacity: {self._capacity - len(self._reservations)} remaining"
+            f"Date: {self._date}, Time: {self._time}, Capacity: {remv} remaining"
         )

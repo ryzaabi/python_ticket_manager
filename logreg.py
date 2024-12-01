@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
+from models.user import User 
+from manager.manager import Manager 
 
+# Instantiate the Manager class
+manager = Manager()
 
 class LogRegModals:
     @staticmethod
@@ -10,11 +14,23 @@ class LogRegModals:
             username = username_entry.get()
             email = email_entry.get()
             password = password_entry.get()
-            if username and email and password:
-                messagebox.showinfo("Success", f"User '{username}' registered successfully!")
-                register_window.destroy()
-            else:
+
+            # Validate input
+            if not username or not email or not password:
                 messagebox.showerror("Error", "All fields are required!")
+                return
+
+            # Check if email already exists
+            for user in manager._users.values():
+                if user.get_email() == email:
+                    messagebox.showerror("Error", "Email already registered!")
+                    return
+
+            # Add the new user
+            user = User(manager._next_user_id, username, email, password)
+            success_message = manager.add_user(user)
+            messagebox.showinfo("Success", success_message)
+            register_window.destroy()
 
         register_window = tk.Toplevel(parent)
         register_window.title("Register")
@@ -78,11 +94,20 @@ class LogRegModals:
         def submit_login():
             email = email_entry.get()
             password = password_entry.get()
-            if email and password:
-                messagebox.showinfo("Success", f"Welcome back!")
-                login_window.destroy()
-            else:
+
+            # Validate input
+            if not email or not password:
                 messagebox.showerror("Error", "Both fields are required!")
+                return
+
+            # Check if email exists and password matches
+            for user in manager._users.values():
+                if user.get_email() == email and user.get_password() == password:
+                    messagebox.showinfo("Success", f"Welcome, {user.get_name()}!")
+                    login_window.destroy()
+                    return
+
+            messagebox.showerror("Error", "Invalid email or password!")
 
         login_window = tk.Toplevel(parent)
         login_window.title("Login")
