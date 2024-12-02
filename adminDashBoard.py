@@ -198,7 +198,7 @@ class TicketManagerApp:
         # Button for booking
         edit_button = tk.Button(
             booking_frame,
-            text="Remove User",
+            text="Edit User",
             font=("Arial", 12),
             bg="#4CAF50",
             fg="white",
@@ -571,6 +571,56 @@ class TicketManagerApp:
 
         submit_button = tk.Button(
             booking_window,
+            text="Submit",
+            font=("Arial", 12),
+            bg="#4CAF50",
+            fg="white",
+            command=submit_delete,
+        )
+        submit_button.pack(pady=10)
+
+    '''
+    Method to delete a user, display a modal
+    '''
+    def delete_user(self, ticket_tree):
+        """Handle the purchase process for the selected event."""
+        selected_item = ticket_tree.selection()
+        if not selected_item:
+            messagebox.showerror("Error", "Please select user to delete!")
+            return
+
+        ticket_details = ticket_tree.item(selected_item, "values")
+        user_id = ticket_details[0]  
+
+        # Prompt for the number of tickets
+        def submit_delete():
+            # Call the manager to handle booking logic
+            success_message = self.manager.delete_user(int(user_id))
+            messagebox.showinfo("Success", success_message)
+            delete_user_window.destroy()
+
+        # Open a modal for ticket input
+        delete_user_window = self.create_modal_window(self.content_frame, " Delete User", 300, 200, bg_color="white")
+
+        tk.Label(
+            delete_user_window,
+            text=f"Delete  User ID: {user_id}",
+            font=("Arial", 12),
+            bg="white",
+        ).pack(pady=10)
+
+        tk.Label(
+            delete_user_window,
+            text="Confirm User ID:",
+            font=("Arial", 10),
+            bg="white",
+        ).pack(anchor=tk.W, padx=20)
+
+        ticket_entry = tk.Entry(delete_user_window, font=("Arial", 12))
+        ticket_entry.pack(pady=10, padx=20, fill=tk.X)
+
+        submit_button = tk.Button(
+            delete_user_window,
             text="Submit",
             font=("Arial", 12),
             bg="#4CAF50",

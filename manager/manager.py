@@ -30,6 +30,19 @@ class Manager:
     def get_user(self, user_id):
         user = self._users.get(user_id)
         return user.display_details() if user else "User not found."
+    
+    def delete_user(self, user_id):
+        user_found = 0
+        user = None
+        for  u in self._users.values():
+            if u.get_user_id() == user_id:
+                user_found = 1
+                del self._users[user_id]
+                return f"User {u.get_name()} (ID: {user_id}) has been successfully deleted."
+
+            
+        return "User not found."
+
 
     def get_all_users(self):
         if not self._users:
