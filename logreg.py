@@ -9,12 +9,13 @@ class LogRegModals:
 
     @staticmethod
     def get_current_user():
-        return current_user
+        return LogRegModals.current_user
     
     @staticmethod
     def create_register_window(parent, manager):
         """Creates the Register modal window."""
         success = False
+        global current_user
         def submit_registration():
             nonlocal success 
             username = username_entry.get()
@@ -37,6 +38,7 @@ class LogRegModals:
             success_message = manager.add_user(user)
             success = True
             LogRegModals.current_user = user #attach user
+            current_user = user
             messagebox.showinfo("Success", success_message)
             register_window.destroy()
             
@@ -119,6 +121,7 @@ class LogRegModals:
                 if user.get_email() == email and user.get_password() == password:
                     messagebox.showinfo("Success", f"Welcome, {user.get_name()}!")
                     LogRegModals.current_user = user #attach user
+                    current_user = user
                     success = True
                     login_window.destroy()
                     return

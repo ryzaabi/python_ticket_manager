@@ -31,6 +31,40 @@ users = {
 }
 
 
+ph = [
+    {
+        "uid": 1,
+        "ticket": tickets[1],
+        "expiry": "2024-12-10",
+        "num_tickets": 2
+    },
+    {
+       "uid": 2,
+        "ticket": tickets[1],
+        "expiry": "2024-12-15",
+        "num_tickets": 1
+    },
+    {
+        "uid": 3,
+        "ticket": tickets[1],
+        "expiry": "2024-12-20",
+        "num_tickets": 3
+    },
+    {
+        "uid": 4,
+        "ticket": tickets[2],
+        "expiry": "2024-12-25",
+        "num_tickets": 4
+    },
+    {
+        "uid": 5,
+        "ticket": tickets[2],
+        "expiry": "2024-12-30",
+        "num_tickets": 5
+    }
+]
+
+
 @staticmethod
 def load_or_create_data(pickle_file="data.pkl"):
     """
@@ -44,17 +78,17 @@ def load_or_create_data(pickle_file="data.pkl"):
         print("Pickle file found. Loading data...")
         with open(pickle_file, "rb") as file:
             data = pickle.load(file)
-            return data.get("tickets", []), data.get("events", []), data.get("users", [])
+            return data.get("tickets", []), data.get("events", []), data.get("users", []), data.get("ph", [])
     else:
         print("No pickle file found. Using mock data and saving it to a pickle file...")
         # Save mock data to the pickle file
-        data = {"tickets": tickets, "events": events, "users": users}
+        data = {"tickets": tickets, "events": events, "users": users,"ph":ph}
         with open(pickle_file, "wb") as file:
             pickle.dump(data, file)
-        return tickets, events, users
+        return tickets, events, users,ph
     
 @staticmethod
-def save_data(tickets, events, users, pickle_file="data.pkl"):
+def save_data(ph,tickets, events, users, pickle_file="data.pkl"):
     """
     Save the given data back to the pickle file.
 
@@ -63,7 +97,7 @@ def save_data(tickets, events, users, pickle_file="data.pkl"):
     :param users: The list of users to be saved.
     :param pickle_file: The name of the pickle file where data will be saved.
     """
-    data = {"tickets": tickets, "events": events, "users": users}
+    data = {"tickets": tickets, "events": events, "users": users,"ph":ph}
     with open(pickle_file, "wb") as file:
         pickle.dump(data, file)
     print("Data saved successfully to pickle file.")

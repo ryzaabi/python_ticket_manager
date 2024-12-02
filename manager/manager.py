@@ -100,6 +100,7 @@ class Manager:
     def add_ticket(self, user, ticket_id,num_tickets):
         # Check if the user exists in the system
         user_found = 0
+        print(user.display_details())
         print("---------------> ",user)
         for  u in self._users.values():
             print(u.display_details())
@@ -272,4 +273,5 @@ class Manager:
     
     def save_data_to_file(self):
         ticket_dict = {ticket.get_ticket_id(): ticket for ticket in self._tickets}
-        save_data(ticket_dict, self._events, self._users)
+        #self._purchase_history = []
+        save_data(self._purchase_history,ticket_dict, self._events, self._users)

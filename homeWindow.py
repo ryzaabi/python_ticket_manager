@@ -179,7 +179,7 @@ class TicketManagerApp:
 # Main
 if __name__ == "__main__":
     manager = Manager()
-    tickets, events, users = load_or_create_data()
+    tickets, events, users , ph = load_or_create_data()
 
     for user in users.values():
         if isinstance(user, User):
@@ -206,6 +206,13 @@ if __name__ == "__main__":
                 manager.load_tickets_data(ticket)
             
             
+   
+    
+    manager._purchase_history = ph
+
+    for p in ph:
+        print("------------------------ph -----------------")
+        print(p)
 
     root = tk.Tk()
     app = TicketManagerApp(root, manager)
