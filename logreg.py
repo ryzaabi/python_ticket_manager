@@ -3,10 +3,6 @@ from tkinter import messagebox
 from models.user import User 
 from manager.manager import Manager 
 
-# Instantiate the Manager class
-manager = Manager()
-
-
 current_user = User(0, "erick", 'erick@gmail.com', "mymum")
 
 class LogRegModals:
@@ -16,9 +12,11 @@ class LogRegModals:
         return current_user
     
     @staticmethod
-    def create_register_window(parent):
+    def create_register_window(parent, manager):
         """Creates the Register modal window."""
+        success = False
         def submit_registration():
+            nonlocal success 
             username = username_entry.get()
             email = email_entry.get()
             password = password_entry.get()
@@ -37,8 +35,11 @@ class LogRegModals:
             # Add the new user
             user = User(manager._next_user_id, username, email, password)
             success_message = manager.add_user(user)
+            success = True
+            LogRegModals.current_user = user #attach user
             messagebox.showinfo("Success", success_message)
             register_window.destroy()
+            
 
         register_window = tk.Toplevel(parent)
         register_window.title("Register")
@@ -96,10 +97,15 @@ class LogRegModals:
         )
         close_button.pack(pady=10)
 
+        register_window.wait_window()
+        return success
+
     @staticmethod
-    def create_login_window(parent):
+    def create_login_window(parent,manager):
         """Creates the Login modal window."""
+        success = False
         def submit_login():
+            nonlocal success 
             email = email_entry.get()
             password = password_entry.get()
 
@@ -113,6 +119,7 @@ class LogRegModals:
                 if user.get_email() == email and user.get_password() == password:
                     messagebox.showinfo("Success", f"Welcome, {user.get_name()}!")
                     LogRegModals.current_user = user #attach user
+                    success = True
                     login_window.destroy()
                     return
 
@@ -169,3 +176,6 @@ class LogRegModals:
             command=login_window.destroy,
         )
         close_button.pack(pady=10)
+
+        login_window.wait_window()
+        return success

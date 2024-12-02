@@ -3,6 +3,8 @@ from models.reservation import Reservation
 from models.event import Event
 from manager.utils import *
 from models.ticket import Ticket
+from data import *
+from models.user import User
 
 
 class Manager:
@@ -25,15 +27,23 @@ class Manager:
         user_id = self._next_user_id
         self._users[user_id] = user
         self._next_user_id += 1
-        return f"User '{user.get_name()}' added successfully with ID {user_id}."
+        result = f"User '{user.get_name()}' added successfully with ID {user_id}."
+        print(result)
+        return result
+    
+    
+    def add_user_data(self, name, email,password):
+        user_id = self._next_user_id
+        new_user = User(user_id, name, email, password)
+        self._users[user_id] = new_user
+        self._next_user_id += 1
+        return f"User '{new_user.get_name()}' added successfully with ID {user_id}."
 
     def get_user(self, user_id):
         user = self._users.get(user_id)
         return user.display_details() if user else "User not found."
     
     def delete_user(self, user_id):
-        user_found = 0
-        user = None
         for  u in self._users.values():
             if u.get_user_id() == user_id:
                 user_found = 1
@@ -65,9 +75,19 @@ class Manager:
         self._tickets.append(new_ticket)
         self._next_ticket_id += 1
 
+    def load_tickets_data(self,ticket):
+        self._tickets.append(ticket)
+        self._next_ticket_id += 1
+
     def get_all_tickets(self):
         """Get a list of all available tickets."""
-        return [ticket.display_details() for ticket in self._tickets]
+        print("-------------- all tickets manager ---------")
+        all_tickets = []
+        for ticket in self._tickets:
+            if isinstance(ticket, Ticket):
+                all_tickets.append(ticket.display_details())
+
+        return all_tickets
 
     def find_ticket_by_id(self, ticket_id):
         """Find a ticket by its ID."""
@@ -80,7 +100,9 @@ class Manager:
     def add_ticket(self, user, ticket_id,num_tickets):
         # Check if the user exists in the system
         user_found = 0
+        print("---------------> ",user)
         for  u in self._users.values():
+            print(u.display_details())
             if u.get_user_id() == user.get_user_id():
                 user_found = 1
                 break
@@ -214,6 +236,13 @@ class Manager:
         return f"Event '{name}' added with ID {event_id}."
     
     # Event Management
+    def add_event_data(self, event):
+        event_id = self._next_event_id
+        self._events[event_id] = event
+        self._next_event_id += 1
+        return f"Event '{event.display_details()}' added with ID {event_id}."
+    
+    # Event Management
     def add_event(self, event_data):
         """
         Add an event using a dictionary with keys:
@@ -240,3 +269,7 @@ class Manager:
         if not self._events:
             return "No events available."
         return [event.get_events() for event in self._events.values()]
+    
+    def save_data_to_file(self):
+        ticket_dict = {ticket.get_ticket_id(): ticket for ticket in self._tickets}
+        save_data(ticket_dict, self._events, self._users)

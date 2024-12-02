@@ -3,6 +3,9 @@ from tkinter import ttk
 from manager.manager import Manager
 from logreg import LogRegModals
 from tkinter import messagebox
+from data import load_or_create_data
+from models.ticket import Ticket
+from models.user import User
 
 
 
@@ -642,73 +645,51 @@ class TicketManagerApp:
         print("Register button clicked!")
         LogRegModals.create_register_window(self.root)
 
+    def show_dashboard(self,manager):
+        manager = manager
 
-# Mock Data
-tickets = [
-    {
-        "id": "01",
-        "Type": "Single-Day Pass",
-        "Description": "Access to the park for one day",
-        "Price": "275 DHS",
-        "Validity": "1 Day",
-        "Discount": "None",
-        "Limitations": "Valid only on selected date",
-    },
-    {
-        "id": "02",
-        "Type": "Two-Day Pass",
-        "Description": "Access to the park for two consecutive days",
-        "Price": "480 DHS",
-        "Validity": "2 Days",
-        "Discount": "10% online discount",
-        "Limitations": "Cannot split over multiple trips",
-    },
-]
+        root = tk.Tk()
+        app = TicketManagerApp(root, manager)
 
-events = [
-    {
-        
-        "name": "Music Festival",
-        "description": "An amazing music event",
-        "date": "2024-12-10",
-        "time": "6:00 PM",
-        "capacity": 500,
-    },
-    {
-        
-        "name": "Food Carnival",
-        "description": "Delicious cuisines from around the world",
-        "date": "2024-12-15",
-        "time": "12:00 PM",
-        "capacity": 300,
-    },
-]
+        root.protocol("WM_DELETE_WINDOW", manager.save_data_to_file())
+        root.mainloop()
+
+
+
 
 # Main
 if __name__ == "__main__":
     manager = Manager()
+    tickets, events, users = load_or_create_data()
 
-    ##for testing
-    print(manager.add_user(LogRegModals.get_current_user()))
-
+    for user in users.values():
+        if isinstance(user, User):
+            ev = manager.add_user(user)
+        
     
-    for event in events:  # Add mock events to the manager
-        ev = manager.add_event(event)
+    for event in events.values(): 
+        print(event.display_details())
+        ev = manager.add_event_data(event)
         print(ev)
 
-    for ticket in tickets:
-            print(ticket)
-            new_ticket = manager.load_tickets(
-                ticket_type=ticket["Type"],
-                description=ticket["Description"],
-                price=ticket["Price"],
-                validity=ticket["Validity"],
-                discount=ticket["Discount"],
-                limitations=ticket["Limitations"],
-            )
-            print(new_ticket)
+    for ticket in tickets.values():
+            print(ticket)          
+            if isinstance(ticket, dict):
+                new_ticket = manager.load_tickets(
+                    ticket_type=ticket["Type"],
+                    description=ticket["Description"],
+                    price=ticket["Price"],
+                    validity=ticket["Validity"],
+                    discount=ticket["Discount"],
+                    limitations=ticket["Limitations"],
+                )
+            else:
+                manager.load_tickets_data(ticket)
+            
             
 
     root = tk.Tk()
     app = TicketManagerApp(root, manager)
+
+    root.protocol("WM_DELETE_WINDOW", manager.save_data_to_file())
     root.mainloop()
