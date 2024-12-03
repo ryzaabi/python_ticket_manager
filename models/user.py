@@ -39,24 +39,3 @@ class User:
 
     def display_details(self):
         return [self._user_id, self._name,self._email, self.get_password()]
-
-    # Manager Services
-    def view_all_events(self, manager):
-        """View all events through the Manager."""
-        events = manager.get_all_events()
-        return "\n".join(events) if events else "No events available."
-
-    def make_reservation(self, manager, ticket, visit_date):
-        """Make a reservation through the Manager."""
-        message = manager.make_reservation(self, ticket, visit_date)
-        return message
-
-    def view_my_reservations(self, manager):
-        """View user's own reservations through the Manager."""
-        reservations = manager.get_user_reservations(self)
-        return "\n".join(reservations) if reservations else "No reservations found."
-
-    def purchase_ticket(self, manager, ticket):
-        """Purchase a ticket through the Manager."""
-        message = manager.add_ticket(self, ticket)
-        return message
