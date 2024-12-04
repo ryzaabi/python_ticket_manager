@@ -5,6 +5,7 @@ from manager.utils import *
 from models.ticket import Ticket
 from data import *
 from models.user import User
+import random
 
 
 class Manager:
@@ -15,6 +16,7 @@ class Manager:
         self._reservations = {}
         self._events = {}
         self._purchase_history = []
+        self._booked_events = []
         self._next_user_id = 1
         self._next_reservation_id = 1
         self._next_event_id = 1
@@ -189,14 +191,17 @@ class Manager:
             return "User not found."
 
         data = []
+        print(self._purchase_history)
         if self._purchase_history:
             for d in self._purchase_history:
                 if d['uid'] == user.get_user_id():
                     ticket_d =  d['ticket'].display_details()
                     ticket_d.append(d['expiry'])
                     ticket_d.append(d['num_tickets'])
-                data.append(ticket_d)
+                    data.append(ticket_d)
+            print(data)
             return data
+        return []
         
     def get_purchased_tickets(self):
         data = []
@@ -219,6 +224,124 @@ class Manager:
             self._next_reservation_id += 1
             return f"Reservation {reservation_id} created for user {user.get_name()}."
         return "User not found."
+    
+    # Reservation Management
+   
+
+    def generate_random_value(self):
+        # Generate three random letters
+        letters = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ') for _ in range(3))
+        # Generate three random numbers
+        numbers = ''.join(random.choice('0123456789') for _ in range(3))
+        # Combine letters and numbers
+        return letters + numbers
+
+    def book_events(self, user, ticket_id, event_id):
+        booking = []
+        print(user.get_name())
+        user_found = 0
+        for  u in self._users.values():
+            if u.get_user_id() == user.get_user_id():
+                user_found = 1
+                break
+
+        if user_found == 0:
+            return "User not found."
+        
+        print(self._purchase_history)
+        for d in self._purchase_history:
+            if d['uid'] == user.get_user_id():
+                if d['ticket'].get_ticket_id() == ticket_id:
+                    if int(d["num_tickets"]) >= 1:
+                        num = self.generate_random_value()
+                        d["num_tickets"] = int(d["num_tickets"]) - 1
+                        booking.append(user.get_user_id())
+                        booking.append(num)
+                        booking.append(event_id)
+                        self._booked_events.append(booking)
+                        print(self._booked_events)
+                        return f"Ticket ID {ticket_id} successfully used for Event {event_id}."
+                    else:
+                        return "Failed.. No enough tickets"
+                else:
+                    print("Tickets dont match",ticket_id,event_id)
+                    
+        return "Failed to book"
+    
+    def get_booked_events(self,user):
+        """
+        retrieve all booked event s for a user
+        """
+        if user.get_user_id() in self._users:
+            user_bookings = []
+            for b in self._booked_events:
+                if b[0] == user.get_user_id():
+                    user_bookings.append(b)
+
+            all_books = []
+            if len(user_bookings) > 0:
+                for b in user_bookings:
+                    user = self.get_user(b[0])
+                    print(user)
+                    event = self.get_event_by_id(b[2])
+                    event_code = b[1]
+                    valid_book = []
+                    valid_book.append(event_code)
+                    valid_book.append(user[2])
+                    for a in event:
+                        valid_book.append(a)
+                    all_books.append(valid_book)
+                return all_books
+
+            else:
+                return []
+        else:
+            return "user not found"
+        
+    def del_booked_events(self, user, event_code):
+        """
+        Remove a booked event for a user based on user ID and event ID.
+        """
+        if user.get_user_id() in self._users and user.get_name() != "admin":
+            # Find the event to remove
+            for b in self._booked_events:
+                if b[0] == user.get_user_id() and b[1] == event_code:
+                    self._booked_events.remove(b)
+                    return "Event successfully removed"
+            return "Event not found for the user"
+        
+        elif user.get_name() == "admin":
+            for b in self._booked_events:
+                if  b[1] == event_code:
+                    self._booked_events.remove(b)
+                    return "Event successfully removed"
+
+        else:
+            return "User not found"
+
+        
+    def get_all_booked_events(self):
+        """
+        retrieve all booked event s for a user
+        """
+        all_books = []
+        if len(self._booked_events) > 0:
+            for b in self._booked_events:
+                user = self.get_user(b[0])
+                event = self.get_event_by_id(b[2])
+                event_code = b[1]
+                valid_book = []
+                valid_book.append(event_code)
+                valid_book.append(user[2])
+                for a in event:
+                        valid_book.append(a)
+                all_books.append(valid_book)
+            return all_books
+
+        else:
+            return []
+        
+
 
     def get_user_reservations(self, user):
         if user.get_user_id() in self._users:
@@ -270,6 +393,12 @@ class Manager:
         if not self._events:
             return "No events available."
         return [event.get_events() for event in self._events.values()]
+    
+    def get_event_by_id(self,id):
+        for x in self._events.values():
+            if x.get_event_id() == id:
+                return x.get_events_detail()
+        return []
     
     def save_data_to_file(self):
         ticket_dict = {ticket.get_ticket_id(): ticket for ticket in self._tickets}

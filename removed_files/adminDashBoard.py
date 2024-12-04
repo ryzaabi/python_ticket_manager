@@ -32,7 +32,44 @@ class TicketManagerApp:
         # Show Default (Tickets)
         self.show_tickets()
 
+    def create_action_frame(self, parent, label_text, buttons):
+        """
+        Create a reusable action frame with a label and buttons.
+        
+        :param parent: The parent frame where the action frame will be added.
+        :param label_text: The text for the action label.
+        :param buttons: A list of tuples where each tuple contains:
+                        (button_text, button_command)
+        """
+        # Create the action frame
+        action_frame = tk.Frame(parent, bg="white")
+        action_frame.pack(fill=tk.X, pady=10)
+
+        # Add the label
+        action_label = tk.Label(
+            action_frame,
+            text=label_text,
+            font=("Arial", 12),
+            bg="white",
+        )
+        action_label.pack(side=tk.LEFT, padx=10)
+
+        # Add buttons dynamically
+        for button_text, button_command in buttons:
+            tk.Button(
+                action_frame,
+                text=button_text,
+                font=("Arial", 12),
+                bg="#4CAF50",
+                fg="white",
+                command=button_command,
+            ).pack(side=tk.RIGHT, padx=10)
+
+
     def create_header(self):
+        """
+        
+        """
         header_frame = tk.Frame(self.root, bg="#3b5998", height=80)
         header_frame.pack(fill=tk.X)
 

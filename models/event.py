@@ -27,12 +27,6 @@ class Event:
     def get_capacity(self):
         return self._capacity
 
-    def add_reservation(self, reservation):
-        if len(self._reservations) < self._capacity:
-            self._reservations.append(reservation)
-            return f"Reservation added for event {self._name}."
-        return "Event capacity reached."
-
     def display_details(self):
         remv =  int(self._capacity) - len(self._reservations)
         return (
@@ -44,4 +38,10 @@ class Event:
         remv =  int(self._capacity) - len(self._reservations)
         return ([
             self._event_id, self._name, self._description, self._date,self._time,remv]
+        )
+    
+    def get_events_detail(self):
+      
+        return ([
+            self._name, self._description, self._date,self._time]
         )
