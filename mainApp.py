@@ -207,6 +207,10 @@ class TicketManagerApp:
         username_entry = tk.Entry(register_frame, font=("Arial", 14))
         username_entry.pack(fill=tk.X, pady=5)
 
+        tk.Label(register_frame, text="email:", bg="#f4f4f4").pack(anchor=tk.W)
+        email_entry = tk.Entry(register_frame, font=("Arial", 14))
+        email_entry.pack(fill=tk.X, pady=5)
+
         tk.Label(register_frame, text="Password:", bg="#f4f4f4").pack(anchor=tk.W)
         password_entry = tk.Entry(register_frame, font=("Arial", 14), show="*")
         password_entry.pack(fill=tk.X, pady=5)
@@ -214,7 +218,8 @@ class TicketManagerApp:
         def register_action():
             username = username_entry.get()
             password = password_entry.get()
-            if self.manager.add_user(User(username, password)):
+            email = email_entry.get()
+            if self.manager.add_user_data(username, email,password):
                 messagebox.showinfo("Success", "Registration successful!")
                 self.show_login()
             else:
