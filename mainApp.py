@@ -423,7 +423,6 @@ class TicketManagerApp:
         if not resizable:
             modal_window.resizable(False, False)  # Disable resizing
 
-        modal_window.attributes("-toolwindow", True)  # Disable minimize/maximize
         return modal_window
     
 
